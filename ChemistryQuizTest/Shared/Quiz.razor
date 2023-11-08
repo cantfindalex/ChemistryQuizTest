@@ -1,0 +1,39 @@
+﻿@page "/quiz"
+
+@inject QuizService quizService
+
+<h3>Chemistry Quiz</h3>
+<p>@question.Question</p>
+
+@foreach (var option in question.Options)
+{
+    <div>
+        <input type="radio" id="@option" name="answer" value="@option" @onchange="CheckAnswer" />
+        <label for="@option">@option</label>
+    </div>
+}
+
+<p>@message</p>
+
+@code {
+    private QuizQuestion question;
+    private string message;
+
+    protected override void OnInitialized()
+    {
+        question = quizService.GetRandomQuestion();
+    }
+
+    private void CheckAnswer(ChangeEventArgs e)
+    {
+        var selectedAnswer = e.Value.ToString();
+        if (selectedAnswer == question.CorrectAnswer)
+        {
+            message = "Correct!";
+        }
+        else
+        {
+            message = "Incorrect. The correct answer is " + question.CorrectAnswer;
+        }
+    }
+}
